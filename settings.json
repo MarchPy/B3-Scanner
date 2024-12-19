@@ -1,9 +1,9 @@
 {
     "symbols": {
-        "stocks": [
+        "acoes": [
             "ALOS3", "ALPA4", "ABEV3", "ASAI3", "AURE3", "AZUL4", "AZZA3", "B3SA3", "BBSE3", "BBDC3", "BBDC4", "BRAP4", "BBAS3", "BRKM5", "BRAV3", "BRFS3", "BPAC11", "CXSE3", "CRFB3", "CCRO3", "CMIG4", "COGN3", "CPLE6", "CSAN3", "CPFE3", "CMIN3", "CVCB3", "CYRE3", "ELET3", "ELET6", "EMBR3", "ENGI11", "ENEV3", "EGIE3", "EQTL3", "EZTC3", "FLRY3", "GGBR4", "GOAU4", "NTCO3", "HAPV3", "HYPE3", "IGTI11", "IRBR3", "ISAE4", "ITSA4", "ITUB4", "JBSS3", "KLBN11", "RENT3", "LREN3", "LWSA3", "MGLU3", "MRFG3", "BEEF3", "MRVE3", "MULT3", "PCAR3", "PETR3", "PETR4", "RECV3", "PRIO3", "PETZ3", "RADL3", "RAIZ4", "RDOR3", "RAIL3", "SBSP3", "SANB11", "STBP3", "SMTO3", "CSNA3", "SLCE3", "SUZB3", "TAEE11", "VIVT3", "TIMS3", "TOTS3", "UGPA3", "USIM5", "VALE3", "VAMO3", "VBBR3", "VIVA3", "WEGE3", "YDUQ3"
         ],
-        "funds": [
+        "fiis": [
             "CACR11", "BPFF11", "AFHI11", "AJFI11", "ALZR11", "RZAT11", "FATN11", "ARRI11", "AIEC11", "BARI11", "BRCR11", "BCIA11", "BCRI11", "BLMG11", "BRCO11", "BROF11", "BTAL11", "BTCI11", "BPML11", "BTRA11", "BTLG11", "CPTS11", "CLIN11", "CPSH11", "CYCR11", "DEVA11", "VRTA11", "GTWR11", "GZIT11", "GGRC11", "GARE11", "HABT11", "HCTR11", "HGBS11", "HGCR11", "HGFF11", "HGLG11", "HGPO11", "HGRE11", "HGRU11", "HTMX11", "HSAF11", "HSLG11", "HSML11", "HFOF11", "INLG11", "IRDM11", "JSAF11", "JSRE11", "KISU11", "KNRI11", "KCRE11", "KNHF11", "KNHY11", "KNIP11", "KNCR11", "KNSC11", "KNUQ11", "KFOF11", "KIVO11", "KORE11", "MALL11", "MANA11", "MCCI11", "MCRE11", "MXRF11", "MFII11", "OUJP11", "PATL11", "PORD11", "RBRL11", "RBRX11", "RBRY11", "RBRP11", "RBRF11", "RBRR11", "RECR11", "RECT11", "RBFF11", "RCRB11", "RBVA11", "RZAK11", "RZTR11", "SARE11", "TRBL11", "SPXS11", "SNCI11", "SNEL11", "SNFF11", "TEPP11", "TGAR11", "TVRI11", "TRXF11", "URPR11", "VGHF11", "VGIP11", "VGIR11", "CVBI11", "LVBI11", "PVBI11", "RVBI11", "VCJR11", "VSLH11", "VIUR11", "VILG11", "VINO11", "VISC11", "WHGR11", "XPCI11", "XPIN11", "XPLG11", "XPML11", "XPSF11", "ZAVI11",
             "FLEM11", "FZDB11", "FZDA11", "AAZQ11", "BBGO11", "AMAZ11", "CPTR11", "DCRA11", "EGAF11", "AGRX11", "RZAG11", "JGPX11", "FGAA11", "GCRA11", "GRWA11", "HGAG11", "IDGO11", "IAAG11", "RURA11", "KDOL11", "KNAX11", "KNCA11", "KOPA11", "LAFI11", "LSAG11", "NCRA11", "NELO11", "NEXG11", "OIAG11", "PLCA11", "RZEO11", "IAGR11", "CRAA11", "STMB11", "SNAG11", "SNFZ11", "VGIA11", "VCRA11", "XPCA11"
         ],
@@ -12,8 +12,137 @@
         ]
     },
     
-    "crossover": {
-        "short_period": 9,
-        "long_period": 21
-    }
+    "setups": {
+        "crossover": {
+            "exponential": true,
+            "short_period": 9,
+            "long_period": 21
+        },
+        "larry_williams": {
+            "exponential": true,
+            "short_period": 9,
+            "filter_ma": 50
+        }
+    },
+
+    "filter": {
+        "acoes": {
+            "P/L": {
+                "min": 0,
+                "max": 0
+            },
+            "P/VP": {
+                "min": 0,
+                "max": 0
+            },
+            "DY": {
+                "min": 0,
+                "max": 0
+            },
+            "PAYOUT": {
+                "min": 0,
+                "max": 0
+            },
+            "ROE": {
+                "min": 0,
+                "max": 0
+            },
+            "ROIC": {
+                "min": 0,
+                "max": 0
+            },
+            "LPA": {
+                "min": 0,
+                "max": 0
+            },
+            "VPA": {
+                "min": 0,
+                "max": 0
+            },
+            "P/EBIT": {
+                "min": 0,
+                "max": 0
+            },
+            "DÍVIDA LÍQUIDA / PATRIMÔNIO": {
+                "min": 0,
+                "max": 0
+            },
+            "DÍVIDA LÍQUIDA / EBITDA": {
+                "min": 0,
+                "max": 0
+            },
+            "DÍVIDA LÍQUIDA / EBIT": {
+                "min": 0,
+                "max": 0
+            },
+            "CAGR RECEITAS 5 ANOS": {
+                "min": 0,
+                "max": 0
+            },
+            "CAGR LUCROS 5 ANOS": {
+                "min": 0,
+                "max": 0
+            }
+        },
+        "fiis": {
+            "DY": {
+                "min": 10,
+                "max": 20
+            },
+            "LIQ. MED.": {
+                "min": null,
+                "max":null
+            },
+            "P/VP": {
+                "min": 0.75,
+                "max": 1
+            },
+            "VACÂNCIA": {
+                "min": 0,
+                "max": 10
+            },
+            "N. DE COTISTAS": {
+                "min": 10000,
+                "max": null
+            },
+            "ÚLT. RENDIMENTO": {
+                "min": 0.1,
+                "max": null
+            }
+        },
+        "bdrs": {
+            "P/L": {
+                "min": 0,
+                "max": 0
+            },
+            "P/VP": {
+                "min": 0,
+                "max": 0
+            },
+            "DY": {
+                "min": 0,
+                "max": 0
+            },
+            "ROE": {
+                "min": 0,
+                "max": 0
+            },
+            "ROIC": {
+                "min": 0,
+                "max": 0
+            },
+            "LPA": {
+                "min": 0,
+                "max": 0
+            },
+            "VPA": {
+                "min": 0,
+                "max": 0
+            },
+            "P/EBIT": {
+                "min": 0,
+                "max": 0
+            }
+        }
+    }  
 }
