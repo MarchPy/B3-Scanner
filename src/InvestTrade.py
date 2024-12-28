@@ -46,7 +46,7 @@ class Setups:
         self._result = {}
     
     def _test_setups(self, symbols: list):
-        df_yf = yf.download(tickers=symbols, period='1y', interval='1d')
+        df_yf = yf.download(tickers=symbols, period='ytd', interval='1d')
         for symbol in symbols:
             df_tmp: pd.DataFrame = pd.DataFrame()
             df_tmp['Open'] = df_yf['Open'][symbol]
@@ -86,7 +86,7 @@ class Setups:
             
     # Setup N°2...
     def crossover(self, df: pd.DataFrame) -> bool:
-        config: dict = self.__settings['setups']['larry_williams']
+        config: dict = self.__settings['setups']['crossover']
         short_period = config['short_period']
         long_period = config['long_period']
         
@@ -255,18 +255,24 @@ class InvestTrade(Setups):
             'CAGR LUCROS 5 ANOS': float,
             'CAGR RECEITAS 5 ANOS': float,
             'VACÂNCIA': float,
-            'ÚLT. RENDIMENTO': float
+            'ÚLT. RENDIMENTO': float,
+            'N. DE COTISTAS': int,
         }
         for column, typ in columns_to_format.items():
             try:
                 if typ is float:
-                    df[column] = df[column].apply(func=lambda x: float(str(x).strip().replace('.', '').replace(',', '.').replace('R$', '').replace('%', '')) if x != '-' else 0.0)
+                    df[column] = df[column].apply(func=lambda x: float(str(x).replace('.', '').replace(',', '.').replace('R$', '').replace('%', '').strip()) if x != '-' else 0.0)
+                
+                elif typ is int:
+                    df[column] = df[column].apply(func=lambda x: int(str(x).replace('.', '').replace(',', '')) if x != '-' else 0)
             
-            except (KeyError, ValueError):
+            except (KeyError, TypeError, ValueError):
                 pass
-         
+        
+        # df = df[df['PRAZO DE DURAÇÃO'] != 'ATIVO']
         df_filtered = self.get_df_filtered(df=df)
         df_filtered.to_excel(excel_writer=f'Planilha de dados fundamentalistas ({self._fetch}).xlsx', index=False)
+        
         
         self._test_setups(symbols=[symbol + ".SA" for symbol in df['ATIVO'].to_list()])
         print(self._result)
