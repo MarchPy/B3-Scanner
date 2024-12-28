@@ -1,3 +1,6 @@
+rich
 pandas
 numpy 
 yfinance
+selenium
+webdriver_manager
