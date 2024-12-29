@@ -1,6 +1,8 @@
-rich
-pandas
-numpy 
-yfinance
-selenium
-webdriver_manager
+lxml==5.3.0
+numpy==2.2.1
+rich==13.9.4
+pandas==2.2.3
+openpyxl==3.1.5
+yfinance==0.2.51
+selenium==4.27.1
+webdriver_manager==4.0.2
