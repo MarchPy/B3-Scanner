@@ -1,34 +1,23 @@
 import os
 import pandas as pd
+from src.Setups import Setups
 from datetime import datetime
 from rich.console import Console
 from selenium.webdriver import Chrome
 from selenium.common import exceptions
 from selenium.webdriver.common.by import By
+from src.Exceptions import TypeFetchNotExists
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
-from src.Exceptions import TypeFetchNotExists
-from src.Setups import Setups
 
 
 console = Console()
 
 
-def safe_find_element(find_func, default: int=0):
-    try:
-        return find_func()
-    
-    except exceptions.NoSuchElementException:
-        return default
-    
-    except AttributeError:
-        return default
-
-
 def clear_output() -> None:
     os.system(command='cls' if os.name == 'nt' else 'clear')
-    
+
 
 class InvestTrade(Setups):
     def __init__(self, settings: dict, fetch: str ='stocks') -> None:
@@ -43,12 +32,22 @@ class InvestTrade(Setups):
         self._symbols: list[str] = self.__settings['symbols'][self._fetch]
 
     def collect_data_from_symbol(self):
+        def safe_find_element(find_func, default: int=0):
+            try:
+                return find_func()
+            
+            except exceptions.NoSuchElementException:
+                return default
+            
+            except AttributeError:
+                return default
+
         chrome_options = Options()
-        chrome_options.add_argument("--headless")        # Executar sem interface gráfica
-        chrome_options.add_argument('--log-level=3')     # Suprime logs
-        chrome_options.add_argument("--disable-gpu")     # Necessário para sistema Windows
-        chrome_options.add_argument("--disable-dev-shm-usage")  # Evitar problemas de memória em containers
-        chrome_options.add_argument('--ignore-certificate-errors')  # Ignora erros SSL
+        chrome_options.add_argument(argument='--headless')        # Executar sem interface gráfica
+        chrome_options.add_argument(argument='--log-level=3')     # Suprime logs
+        chrome_options.add_argument(argument='--disable-gpu')     # Necessário para sistema Windows
+        chrome_options.add_argument(argument='--disable-dev-shm-usage')  # Evitar problemas de memória em containers
+        chrome_options.add_argument(argument='--ignore-certificate-errors')  # Ignora erros SSL
         driver = Chrome(
             service=Service(
                 executable_path=ChromeDriverManager().install()
@@ -66,7 +65,7 @@ class InvestTrade(Setups):
                 driver.get(url=url)
                 try:
                     driver.find_element(by=By.CLASS_NAME, value='antialiased')
-                    console.print(f"[[red]404 Not found[/]]")
+                    console.print(f"[[red]Error 404[/]]")
                         
                 except exceptions.NoSuchElementException:
                     header_cards_ticker = safe_find_element(find_func=lambda: driver.find_element(by=By.TAG_NAME, value='section').find_element(by=By.ID, value='cards-ticker'))
@@ -125,26 +124,23 @@ class InvestTrade(Setups):
                         }
                         data.append(line)
                                 
-                    elif self._fetch == 'fiis':    
+                    elif self._fetch == 'fiis':
                         line = {
                             'ATIVO': symbol,
-                            'COTAÇÃO': safe_find_element(find_func=lambda: header_cards_ticker.find_element(by=By.CLASS_NAME, value='cotacao').find_element(by=By.CLASS_NAME, value='_card-body').text),
-                            'DY': safe_find_element(find_func=lambda: header_cards_ticker.find_element(by=By.CLASS_NAME, value='dy').find_element(by=By.CLASS_NAME, value='_card-body').text),
-                            'LIQ. MED.': safe_find_element(find_func=lambda: header_cards_ticker.find_element(by=By.CLASS_NAME, value='val').find_element(by=By.CLASS_NAME, value='_card-body').text),
-                            'P/VP': safe_find_element(find_func=lambda: header_cards_ticker.find_element(by=By.CLASS_NAME, value='vp').find_element(by=By.CLASS_NAME, value='_card-body').text),
-                            
-                            # Sobre a empresa
                             'RAZÃO SOCIAL': safe_find_element(find_func=lambda: table_indicators.find_element(by=By.XPATH, value='//*[@id="table-indicators"]/div[1]/div[2]/div/span').text),
                             'CNPJ': safe_find_element(find_func=lambda: table_indicators.find_element(by=By.XPATH, value='//*[@id="table-indicators"]/div[2]/div[2]/div/span').text),
-                            'SEGMENTO': safe_find_element(find_func=lambda: table_indicators.find_element(by=By.XPATH, value='//*[@id="table-indicators"]/div[5]/div[2]/div/span').text),
                             'TIPO': safe_find_element(find_func=lambda: table_indicators.find_element(by=By.XPATH, value='//*[@id="table-indicators"]/div[6]/div[2]/div/span').text),
+                            'SEGMENTO': safe_find_element(find_func=lambda: table_indicators.find_element(by=By.XPATH, value='//*[@id="table-indicators"]/div[5]/div[2]/div/span').text),
                             'PRAZO DE DURAÇÃO': safe_find_element(find_func=lambda: table_indicators.find_element(by=By.XPATH, value='//*[@id="table-indicators"]/div[7]/div[2]/div/span').text),
                             'TAXA DE ADMINISTRAÇÃO': safe_find_element(find_func=lambda: table_indicators.find_element(by=By.XPATH, value='//*[@id="table-indicators"]/div[9]/div[2]/div/span').text),
                             'VACÂNCIA': safe_find_element(find_func=lambda: table_indicators.find_element(by=By.XPATH, value='//*[@id="table-indicators"]/div[10]/div[2]/div/span').text),
                             'N. DE COTISTAS': safe_find_element(find_func=lambda: table_indicators.find_element(by=By.XPATH, value='//*[@id="table-indicators"]/div[11]/div[2]/div/span').text),
+                            'COTAÇÃO': safe_find_element(find_func=lambda: header_cards_ticker.find_element(by=By.CLASS_NAME, value='cotacao').find_element(by=By.CLASS_NAME, value='_card-body').text),
+                            'DY': safe_find_element(find_func=lambda: header_cards_ticker.find_element(by=By.CLASS_NAME, value='dy').find_element(by=By.CLASS_NAME, value='_card-body').text),
+                            'P/VP': safe_find_element(find_func=lambda: header_cards_ticker.find_element(by=By.CLASS_NAME, value='vp').find_element(by=By.CLASS_NAME, value='_card-body').text),
+                            'LIQ. MED.': safe_find_element(find_func=lambda: header_cards_ticker.find_element(by=By.CLASS_NAME, value='val').find_element(by=By.CLASS_NAME, value='_card-body').text),
                             'VPA': safe_find_element(find_func=lambda: table_indicators.find_element(by=By.XPATH, value='//*[@id="table-indicators"]/div[13]/div[2]/div/span').text),
                             'ÚLT. RENDIMENTO': safe_find_element(find_func=lambda: table_indicators.find_element(by=By.XPATH, value='//*[@id="table-indicators"]/div[15]/div[2]/div/span').text),
-                            
                         }
                         
                         data.append(line)
@@ -175,19 +171,53 @@ class InvestTrade(Setups):
                                         .replace(' M', '0000')
                 )
             )
-            df['% Últ. Rendimento (M)'] = df['ÚLT. RENDIMENTO'] / df['COTAÇÃO'] * 100
-            df['% Últ. Rendimento (A)'] = (df['ÚLT. RENDIMENTO'] / df['COTAÇÃO'] * 100) * 12
+            df['% ÚLT. RENDIMENTO (M)'] = df['ÚLT. RENDIMENTO'] / df['COTAÇÃO'] * 100
         
-            df = self.get_df_filtered(df=df)
-            self._test_setups(symbols=[symbol + ".SA" for symbol in df['ATIVO'].to_list()])
-            for index, row in df.iterrows():
-                symbol = row['ATIVO']
-                for k, v in self._result[symbol].items():
-                    df.at[index, k.upper()] = v
+        df = self.get_df_filtered(df=df)
+        self._test_setups(symbols=[symbol + ".SA" for symbol in df['ATIVO'].to_list()])
+        for index, row in df.iterrows():
+            symbol = row['ATIVO']
+            for k, v in self._result[symbol].items():
+                df.at[index, k.upper()] = v
 
-        
+        df = self.ahp_gaussiano(df=df)
         self.save_file(df=df)
        
+    def ahp_gaussiano(self, df: pd.DataFrame) -> pd.DataFrame:
+        config: dict = self.__settings['ahp-gaussiano'][self._fetch]
+        df_copy = df.copy()
+        df_copy = df_copy[[col for col in config.keys()]]
+        
+        # Normalização dos critérios
+        for k, v in config.items():
+            if v > 0:
+                value = df_copy[k].max()
+                df_copy[k].apply(lambda x: x / value)
+                
+            elif v < 0:
+                value = df_copy[k].min()
+                df_copy[k].apply(lambda x: value / x)
+                
+            else:
+                pass
+        
+        # Calcular dos fatores gaussianos (Dividir o desvio padrão pela média)
+        fator_gaussiano = [df_copy[col].std() / df_copy[col].mean() for col in df_copy.columns]
+
+        # Normalização dos fatores gaussianos (Dividir o fator gaussiano, calculado individualmente, pela soma dos fatores gaussianos)
+        soma_fatores = sum(fator_gaussiano)
+        fatores_normalizados = [fg / soma_fatores for fg in fator_gaussiano]
+        
+        # Aplicação dos pesos normalizados às alternativas (Multiplicando cada fator normalizado pela coluna respectiva)
+        df_copy = df_copy * fatores_normalizados
+
+        # Cálculo da pontuação final para cada alternativa
+        df_copy['Pontuação Final'] = df_copy.sum(axis=1)
+        df = pd.merge(left=df, right=df_copy[['Pontuação Final']], left_index=True, right_index=True)
+        df = df.sort_values(by='Pontuação Final', ascending=False).reset_index(drop=True)
+        df['Pontuação Final'] = [i for i in range(1, len(df) + 1)]
+        return df[:10] 
+            
     @staticmethod
     def format_columns(df: pd.DataFrame) -> pd.DataFrame:
         columns_to_format = {
@@ -254,9 +284,8 @@ class InvestTrade(Setups):
         return df
             
     def save_file(self, df: pd.DataFrame) -> None:
-        save_file_path = f"Resultados/{datetime.now().strftime('%d-%m-%Y')}/{self._fetch}/"
+        save_file_path = f"Resultados/{self._fetch}/{datetime.now().strftime('%d-%m-%Y')}/"
         if not os.path.exists(path=save_file_path):
             os.makedirs(name=save_file_path)
         
         df.to_excel(excel_writer=f"{save_file_path}Planilha de dados fundamentalistas.xlsx", index=False)
-            
