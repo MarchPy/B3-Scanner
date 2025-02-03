@@ -1,6 +1,12 @@
 import numpy as np
 import pandas as pd
 import yfinance as yf
+from math import sqrt
+from datetime import datetime
+from rich.console import Console
+
+
+console = Console()
 
 
 class Setups:
@@ -11,6 +17,8 @@ class Setups:
     def _test_setups(self, symbols: list):
         df_yf = yf.download(tickers=symbols, period='ytd', interval='1d')
         for symbol in symbols:
+            console.print(f'[{datetime.now().strftime(format='%H:%M:%S')}] -> [[blue bold]Coletando dados históricos do ativo[/]] :: {symbol[:-3]}')
+            
             df_tmp: pd.DataFrame = pd.DataFrame()
             df_tmp['Open'] = df_yf['Open'][symbol]
             df_tmp['High'] = df_yf['High'][symbol]
@@ -22,7 +30,7 @@ class Setups:
             self._result[symbol[:-3]] = {
                 'Larry Williams': self.larry_williams(df=df_tmp),
                 'Cruzamento de médias': self.crossover(df=df_tmp),
-                'Vola. Anual': self.calculate_volatility(df=df_tmp),
+                'Vola. Anual': self.calculate_volatility(df=df_tmp)
             }
 
     # Setup N°1...
@@ -76,3 +84,4 @@ class Setups:
         annualized_volatility = daily_volatility * np.sqrt(252)
 
         return annualized_volatility * 100
+
