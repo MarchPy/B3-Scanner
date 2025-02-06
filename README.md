@@ -14,7 +14,7 @@ InvestTrade é uma ferramenta automatizada para coleta de dados fundamentalistas
 Certifique-se de ter as seguintes dependências instaladas antes de rodar o programa:
 
 ```sh
-pip install pandas selenium webdriver-manager rich
+pip install lxml==5.3.0 numpy==2.2.1 rich==13.9.4 pandas==2.2.3 openpyxl==3.1.5 yfinance==0.2.51 selenium==4.27.1 webdriver_manager==4.0.2
 ```
 
 ## Como Usar

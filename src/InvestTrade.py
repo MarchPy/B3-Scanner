@@ -62,90 +62,100 @@ class InvestTrade(Setups):
             
             console.print(f'[{datetime.now().strftime(format='%H:%M:%S')}] -> [{i} de {len(self._symbols)}]-[[blue bold]Coletando dados fundamentalistas do ativo[/]] :: {symbol} ->', end=' ')
             url: str = f"https://investidor10.com.br/{self._fetch}/{symbol}/"
-
-            try:
-                driver.get(url=url)
-                try:
-                    driver.find_element(by=By.CLASS_NAME, value='antialiased')
-                    console.print(f"[[red]Error 404[/]]")
-                        
-                except exceptions.NoSuchElementException:
-                    header_cards_ticker = safe_find_element(find_func=lambda: driver.find_element(by=By.TAG_NAME, value='section').find_element(by=By.ID, value='cards-ticker'))
-                    table_indicators = safe_find_element(find_func=lambda: driver.find_element(by=By.ID, value='table-indicators'))
-                    table_indicators_company = safe_find_element(find_func=lambda: driver.find_element(by=By.ID, value='table-indicators-company'))
-                    
-                    if self._fetch == 'acoes':
-                        line = {
-                            'ATIVO': symbol,
-                            'COTAÇÃO': safe_find_element(find_func=lambda: header_cards_ticker.find_element(By.XPATH, value='//*[@id="cards-ticker"]/div[1]/div[2]/div/span').text),
-                            'VARIAÇÃO (12M)': safe_find_element(find_func=lambda: header_cards_ticker.find_element(By.XPATH, value='//*[@id="cards-ticker"]/div[2]/div[2]/div/span').text),
-                            'P/L': safe_find_element(find_func=lambda: header_cards_ticker.find_element(By.XPATH, value='//*[@id="cards-ticker"]/div[3]/div[2]/span').text),
-                            'P/VP': safe_find_element(find_func=lambda: header_cards_ticker.find_element(By.XPATH, value='//*[@id="cards-ticker"]/div[4]/div[2]/span').text),
-                            'DY': safe_find_element(find_func=lambda: header_cards_ticker.find_element(By.XPATH, value='//*[@id="cards-ticker"]/div[5]/div[2]/span').text),
-                            'PAYOUT': safe_find_element(find_func=lambda: table_indicators.find_element(By.XPATH, value='//*[@id="table-indicators"]/div[5]/div[1]').text),
-                            'ROE': safe_find_element(find_func=lambda: table_indicators.find_element(By.XPATH, value='//*[@id="table-indicators"]/div[20]/div[1]').text),
-                            'ROIC': safe_find_element(find_func=lambda: table_indicators.find_element(By.XPATH, value='//*[@id="table-indicators"]/div[21]/div[1]').text),
-                            'LPA': safe_find_element(find_func=lambda: table_indicators.find_element(By.XPATH, value='//*[@id="table-indicators"]/div[18]/div[1]').text),
-                            'VPA': safe_find_element(find_func=lambda: table_indicators.find_element(By.XPATH, value='//*[@id="table-indicators"]/div[17]/div[1]').text),
-                            'P/EBIT': safe_find_element(find_func=lambda: table_indicators.find_element(By.XPATH, value='//*[@id="table-indicators"]/div[13]/div[1]').text),
-                            'DÍVIDA LÍQUIDA / PATRIMÔNIO': safe_find_element(find_func=lambda: table_indicators.find_element(By.XPATH, value='//*[@id="table-indicators"]/div[26]/div[1]').text),
-                            'DÍVIDA LÍQUIDA / EBITDA': safe_find_element(find_func=lambda: table_indicators.find_element(By.XPATH, value='//*[@id="table-indicators"]/div[24]/div[1]').text),
-                            'DÍVIDA LÍQUIDA / EBIT': safe_find_element(find_func=lambda: table_indicators.find_element(By.XPATH, value='//*[@id="table-indicators"]/div[25]/div[1]').text),
-                            'CAGR RECEITAS 5 ANOS': safe_find_element(find_func=lambda: table_indicators.find_element(By.XPATH, value='//*[@id="table-indicators"]/div[24]/div[1]/span').text),
-                            'SETOR': safe_find_element(lambda: table_indicators_company.find_element(By.XPATH, value='//*[@id="table-indicators-company"]/div[14]/a/span[2]').text),
-                            'SUBSETOR': safe_find_element(lambda: table_indicators_company.find_element(By.XPATH, value='//*[@id="table-indicators-company"]/div[15]/a/span[2]').text),
-                        }
-                        
-                        data.append(line)
-                        
-                    elif self._fetch == 'bdrs':
-                        line = {
-                            'ATIVO': symbol,
-                            'COTAÇÃO': safe_find_element(find_func=lambda: header_cards_ticker.find_element(by=By.CLASS_NAME, value='cotacao').find_element(by=By.CLASS_NAME, value='_card-body').text),
-                            'VARIAÇÃO (12M)': safe_find_element(find_func=lambda: header_cards_ticker.find_element(by=By.CLASS_NAME, value='pl').find_element(by=By.CLASS_NAME, value='_card-body').text),
-                            'P/L': safe_find_element(find_func=lambda: header_cards_ticker.find_element(by=By.CLASS_NAME, value='val').find_element(by=By.CLASS_NAME, value='_card-body').text),
-                            'P/VP': safe_find_element(find_func=lambda: header_cards_ticker.find_element(by=By.CLASS_NAME, value='vp').find_element(by=By.CLASS_NAME, value='_card-body').text),
-                            'DY': safe_find_element(find_func=lambda: header_cards_ticker.find_element(by=By.CLASS_NAME, value='dy').find_element(by=By.CLASS_NAME, value='_card-body').text),
-                            'ROE': safe_find_element(find_func=lambda: table_indicators.find_element(by=By.XPATH, value='//*[@id="table-indicators"]/div[6]/div[1]/span').text),
-                            'ROIC': safe_find_element(find_func=lambda: table_indicators.find_element(by=By.XPATH, value='//*[@id="table-indicators"]/div[7]/div[1]/span').text),
-                            'LPA': safe_find_element(find_func=lambda: table_indicators.find_element(by=By.XPATH, value='//*[@id="table-indicators"]/div[15]/div[1]/span').text),
-                            'VPA': safe_find_element(find_func=lambda: table_indicators.find_element(by=By.XPATH, value='//*[@id="table-indicators"]/div[14]/div[1]/span').text),
-                            'P/EBIT': safe_find_element(find_func=lambda: table_indicators.find_element(by=By.XPATH, value='//*[@id="table-indicators"]/div[11]/div[1]/span').text),
-                            'SETOR': safe_find_element(find_func=lambda: table_indicators_company.find_element(by=By.XPATH, value='//*[@id="table-indicators-company"]/div[6]/span[2]').text),
-                            'INDUSTRIA': safe_find_element(find_func=lambda: table_indicators.find_element(by=By.XPATH, value='//*[@id="table-indicators-company"]/div[7]/span[2]').text),
-                            'PARIDADE DA BDR': safe_find_element(find_func=lambda: table_indicators_company.find_element(by=By.XPATH, value='//*[@id="table-indicators-company"]/div[8]/span[2]').text),
-                        }
-                        
-                        data.append(line)
-                                
-                    elif self._fetch == 'fiis':
-                        line = {
-                            'ATIVO': symbol,
-                            'RAZÃO SOCIAL': safe_find_element(find_func=lambda: table_indicators.find_element(by=By.XPATH, value='//*[@id="table-indicators"]/div[1]/div[2]/div/span').text),
-                            'CNPJ': safe_find_element(find_func=lambda: table_indicators.find_element(by=By.XPATH, value='//*[@id="table-indicators"]/div[2]/div[2]/div/span').text),
-                            'TIPO': safe_find_element(find_func=lambda: table_indicators.find_element(by=By.XPATH, value='//*[@id="table-indicators"]/div[6]/div[2]/div/span').text),
-                            'SEGMENTO': safe_find_element(find_func=lambda: table_indicators.find_element(by=By.XPATH, value='//*[@id="table-indicators"]/div[5]/div[2]/div/span').text),
-                            'PRAZO DE DURAÇÃO': safe_find_element(find_func=lambda: table_indicators.find_element(by=By.XPATH, value='//*[@id="table-indicators"]/div[7]/div[2]/div/span').text),
-                            'TAXA DE ADMINISTRAÇÃO': safe_find_element(find_func=lambda: table_indicators.find_element(by=By.XPATH, value='//*[@id="table-indicators"]/div[9]/div[2]/div/span').text),
-                            'VACÂNCIA': safe_find_element(find_func=lambda: table_indicators.find_element(by=By.XPATH, value='//*[@id="table-indicators"]/div[10]/div[2]/div/span').text),
-                            'N. DE COTISTAS': safe_find_element(find_func=lambda: table_indicators.find_element(by=By.XPATH, value='//*[@id="table-indicators"]/div[11]/div[2]/div/span').text),
-                            'COTAÇÃO': safe_find_element(find_func=lambda: header_cards_ticker.find_element(by=By.CLASS_NAME, value='cotacao').find_element(by=By.CLASS_NAME, value='_card-body').text),
-                            'DY': safe_find_element(find_func=lambda: header_cards_ticker.find_element(by=By.CLASS_NAME, value='dy').find_element(by=By.CLASS_NAME, value='_card-body').text),
-                            'P/VP': safe_find_element(find_func=lambda: header_cards_ticker.find_element(by=By.CLASS_NAME, value='vp').find_element(by=By.CLASS_NAME, value='_card-body').text),
-                            'LIQ. MED.': safe_find_element(find_func=lambda: header_cards_ticker.find_element(by=By.CLASS_NAME, value='val').find_element(by=By.CLASS_NAME, value='_card-body').text),
-                            'VPA': safe_find_element(find_func=lambda: table_indicators.find_element(by=By.XPATH, value='//*[@id="table-indicators"]/div[13]/div[2]/div/span').text),
-                            'ÚLT. RENDIMENTO': safe_find_element(find_func=lambda: table_indicators.find_element(by=By.XPATH, value='//*[@id="table-indicators"]/div[15]/div[2]/div/span').text),
-                        }
-                        
-                        data.append(line)
-
-                    console.print(f"[[green]Dados coletados[/]]")
-                
-            except exceptions.UnexpectedAlertPresentException:
-                console.print(f"[[red]UnexpectedAlertPresentException[/]]")
             
-            except exceptions.TimeoutException:
-                console.print(f"[[red]Tempo limite excedido ao carregar a página: {url}[/]]")
+            try_limit = 0
+            while try_limit <= 10:
+                try:
+                    driver.get(url=url)
+                    try:
+                        driver.find_element(by=By.CLASS_NAME, value='antialiased')
+                        console.print(f"[[red]Ativo não encontrado[/]]")
+                        break
+                            
+                    except exceptions.NoSuchElementException:
+                        header_cards_ticker = safe_find_element(find_func=lambda: driver.find_element(by=By.ID, value='cards-ticker'))
+                        table_indicators = safe_find_element(find_func=lambda: driver.find_element(by=By.ID, value='table-indicators'))
+                        table_indicators_company = safe_find_element(find_func=lambda: driver.find_element(by=By.ID, value='table-indicators-company'))
+                        
+                        if self._fetch == 'acoes':
+                            line = {
+                                'ATIVO': symbol,
+                                'COTAÇÃO': safe_find_element(find_func=lambda: header_cards_ticker.find_element(By.XPATH, value='//*[@id="cards-ticker"]/div[1]/div[2]/div/span').text),
+                                'VARIAÇÃO (12M)': safe_find_element(find_func=lambda: header_cards_ticker.find_element(By.XPATH, value='//*[@id="cards-ticker"]/div[2]/div[2]/div/span').text),
+                                'P/L': safe_find_element(find_func=lambda: header_cards_ticker.find_element(By.XPATH, value='//*[@id="cards-ticker"]/div[3]/div[2]/span').text),
+                                'P/VP': safe_find_element(find_func=lambda: header_cards_ticker.find_element(By.XPATH, value='//*[@id="cards-ticker"]/div[4]/div[2]/span').text),
+                                'DY': safe_find_element(find_func=lambda: header_cards_ticker.find_element(By.XPATH, value='//*[@id="cards-ticker"]/div[5]/div[2]/span').text),
+                                'PAYOUT': safe_find_element(find_func=lambda: table_indicators.find_element(By.XPATH, value='//*[@id="table-indicators"]/div[5]/div[1]').text),
+                                'ROE': safe_find_element(find_func=lambda: table_indicators.find_element(By.XPATH, value='//*[@id="table-indicators"]/div[20]/div[1]').text),
+                                'ROIC': safe_find_element(find_func=lambda: table_indicators.find_element(By.XPATH, value='//*[@id="table-indicators"]/div[21]/div[1]').text),
+                                'LPA': safe_find_element(find_func=lambda: table_indicators.find_element(By.XPATH, value='//*[@id="table-indicators"]/div[18]/div[1]').text),
+                                'VPA': safe_find_element(find_func=lambda: table_indicators.find_element(By.XPATH, value='//*[@id="table-indicators"]/div[17]/div[1]').text),
+                                'P/EBIT': safe_find_element(find_func=lambda: table_indicators.find_element(By.XPATH, value='//*[@id="table-indicators"]/div[13]/div[1]').text),
+                                'DÍVIDA LÍQUIDA / PATRIMÔNIO': safe_find_element(find_func=lambda: table_indicators.find_element(By.XPATH, value='//*[@id="table-indicators"]/div[26]/div[1]').text),
+                                'DÍVIDA LÍQUIDA / EBITDA': safe_find_element(find_func=lambda: table_indicators.find_element(By.XPATH, value='//*[@id="table-indicators"]/div[24]/div[1]').text),
+                                'DÍVIDA LÍQUIDA / EBIT': safe_find_element(find_func=lambda: table_indicators.find_element(By.XPATH, value='//*[@id="table-indicators"]/div[25]/div[1]').text),
+                                'CAGR RECEITAS 5 ANOS': safe_find_element(find_func=lambda: table_indicators.find_element(By.XPATH, value='//*[@id="table-indicators"]/div[24]/div[1]/span').text),
+                                'SETOR': safe_find_element(lambda: table_indicators_company.find_element(By.XPATH, value='//*[@id="table-indicators-company"]/div[14]/a/span[2]').text),
+                                'SUBSETOR': safe_find_element(lambda: table_indicators_company.find_element(By.XPATH, value='//*[@id="table-indicators-company"]/div[15]/a/span[2]').text),
+                            }
+                            
+                            data.append(line)
+                            
+                        elif self._fetch == 'bdrs':
+                            line = {
+                                'ATIVO': symbol,
+                                'COTAÇÃO': safe_find_element(find_func=lambda: header_cards_ticker.find_element(by=By.CLASS_NAME, value='cotacao').find_element(by=By.CLASS_NAME, value='_card-body').text),
+                                'VARIAÇÃO (12M)': safe_find_element(find_func=lambda: header_cards_ticker.find_element(by=By.CLASS_NAME, value='pl').find_element(by=By.CLASS_NAME, value='_card-body').text),
+                                'P/L': safe_find_element(find_func=lambda: header_cards_ticker.find_element(by=By.CLASS_NAME, value='val').find_element(by=By.CLASS_NAME, value='_card-body').text),
+                                'P/VP': safe_find_element(find_func=lambda: header_cards_ticker.find_element(by=By.CLASS_NAME, value='vp').find_element(by=By.CLASS_NAME, value='_card-body').text),
+                                'DY': safe_find_element(find_func=lambda: header_cards_ticker.find_element(by=By.CLASS_NAME, value='dy').find_element(by=By.CLASS_NAME, value='_card-body').text),
+                                'ROE': safe_find_element(find_func=lambda: table_indicators.find_element(by=By.XPATH, value='//*[@id="table-indicators"]/div[6]/div[1]/span').text),
+                                'ROIC': safe_find_element(find_func=lambda: table_indicators.find_element(by=By.XPATH, value='//*[@id="table-indicators"]/div[7]/div[1]/span').text),
+                                'LPA': safe_find_element(find_func=lambda: table_indicators.find_element(by=By.XPATH, value='//*[@id="table-indicators"]/div[15]/div[1]/span').text),
+                                'VPA': safe_find_element(find_func=lambda: table_indicators.find_element(by=By.XPATH, value='//*[@id="table-indicators"]/div[14]/div[1]/span').text),
+                                'P/EBIT': safe_find_element(find_func=lambda: table_indicators.find_element(by=By.XPATH, value='//*[@id="table-indicators"]/div[11]/div[1]/span').text),
+                                'SETOR': safe_find_element(find_func=lambda: table_indicators_company.find_element(by=By.XPATH, value='//*[@id="table-indicators-company"]/div[6]/span[2]').text),
+                                'INDUSTRIA': safe_find_element(find_func=lambda: table_indicators.find_element(by=By.XPATH, value='//*[@id="table-indicators-company"]/div[7]/span[2]').text),
+                                'PARIDADE DA BDR': safe_find_element(find_func=lambda: table_indicators_company.find_element(by=By.XPATH, value='//*[@id="table-indicators-company"]/div[8]/span[2]').text),
+                            }
+                            
+                            data.append(line)
+                                    
+                        elif self._fetch == 'fiis':
+                            line = {
+                                'ATIVO': symbol,
+                                'RAZÃO SOCIAL': safe_find_element(find_func=lambda: table_indicators.find_element(by=By.XPATH, value='//*[@id="table-indicators"]/div[1]/div[2]/div/span').text),
+                                'CNPJ': safe_find_element(find_func=lambda: table_indicators.find_element(by=By.XPATH, value='//*[@id="table-indicators"]/div[2]/div[2]/div/span').text),
+                                'TIPO': safe_find_element(find_func=lambda: table_indicators.find_element(by=By.XPATH, value='//*[@id="table-indicators"]/div[6]/div[2]/div/span').text),
+                                'SEGMENTO': safe_find_element(find_func=lambda: table_indicators.find_element(by=By.XPATH, value='//*[@id="table-indicators"]/div[5]/div[2]/div/span').text),
+                                'PRAZO DE DURAÇÃO': safe_find_element(find_func=lambda: table_indicators.find_element(by=By.XPATH, value='//*[@id="table-indicators"]/div[7]/div[2]/div/span').text),
+                                'TAXA DE ADMINISTRAÇÃO': safe_find_element(find_func=lambda: table_indicators.find_element(by=By.XPATH, value='//*[@id="table-indicators"]/div[9]/div[2]/div/span').text),
+                                'VACÂNCIA': safe_find_element(find_func=lambda: table_indicators.find_element(by=By.XPATH, value='//*[@id="table-indicators"]/div[10]/div[2]/div/span').text),
+                                'N. DE COTISTAS': safe_find_element(find_func=lambda: table_indicators.find_element(by=By.XPATH, value='//*[@id="table-indicators"]/div[11]/div[2]/div/span').text),
+                                'COTAÇÃO': safe_find_element(find_func=lambda: header_cards_ticker.find_element(by=By.CLASS_NAME, value='cotacao').find_element(by=By.CLASS_NAME, value='_card-body').text),
+                                'DY': safe_find_element(find_func=lambda: header_cards_ticker.find_element(by=By.CLASS_NAME, value='dy').find_element(by=By.CLASS_NAME, value='_card-body').text),
+                                'P/VP': safe_find_element(find_func=lambda: header_cards_ticker.find_element(by=By.CLASS_NAME, value='vp').find_element(by=By.CLASS_NAME, value='_card-body').text),
+                                'LIQ. MED.': safe_find_element(find_func=lambda: header_cards_ticker.find_element(by=By.CLASS_NAME, value='val').find_element(by=By.CLASS_NAME, value='_card-body').text),
+                                'VPA': safe_find_element(find_func=lambda: table_indicators.find_element(by=By.XPATH, value='//*[@id="table-indicators"]/div[13]/div[2]/div/span').text),
+                                'ÚLT. RENDIMENTO': safe_find_element(find_func=lambda: table_indicators.find_element(by=By.XPATH, value='//*[@id="table-indicators"]/div[15]/div[2]/div/span').text),
+                            }
+                            
+                            data.append(line)
+
+                        console.print(f"[[green]Dados coletados[/]]")
+                        break
+                    
+                except exceptions.UnexpectedAlertPresentException:
+                    console.print("[[red]UnexpectedAlertPresentException[/]]")
+                    try_limit += 1
+                
+                except exceptions.TimeoutException:
+                    console.print(f"[[red]Tempo limite excedido ao carregar a página: {url}[/]]")
+                    try_limit += 1
+                    
+                except exceptions.WebDriverException:
+                    console.print("[[red]Exceção do WebDriver[/]]")
+                    try_limit += 1
                 
         # Tratando o dataframe final para realizar a filtragem
         df = pd.DataFrame(data=data)
@@ -170,12 +180,12 @@ class InvestTrade(Setups):
             console.print("[[yellow bold]Não há resultados à serem mostrados... Sem oportunidade de investimento[/]]")
        
     def ahp_gaussiano(self, df: pd.DataFrame) -> pd.DataFrame:
-        config: dict = self.__settings['ahp-gaussiano'][self._fetch]
+        config: dict = self.__settings['ahp-gaussiano']
         df_copy = df.copy()
-        df_copy = df_copy[[col for col in config.keys()]]
+        df_copy = df_copy[[col for col in config[self._fetch].keys()]]
         
         # Normalização dos critérios
-        for k, v in config.items():
+        for k, v in config[self._fetch].items():
             if v > 0:
                 value = df_copy[k].max()
                 df_copy[k].apply(lambda x: x / value)
@@ -202,7 +212,7 @@ class InvestTrade(Setups):
         df = pd.merge(left=df, right=df_copy[['Pontuação Final']], left_index=True, right_index=True)
         df = df.sort_values(by='Pontuação Final', ascending=False).reset_index(drop=True)
         df['Pontuação Final'] = [i for i in range(1, len(df) + 1)]
-        return df
+        return df[:config['limite']]
             
     @staticmethod
     def format_columns(df: pd.DataFrame) -> pd.DataFrame:
@@ -250,6 +260,8 @@ class InvestTrade(Setups):
     
     def get_df_filtered(self, df: pd.DataFrame) -> pd.DataFrame:
         config: dict = self.__settings['filter'][self._fetch]
+        df = df[df['COTAÇÃO'] > 0]
+        
         for k, v in config.items():
             min = v['min']
             max = v['max']

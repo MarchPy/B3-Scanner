@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 import yfinance as yf
-from math import sqrt
 from datetime import datetime
 from rich.console import Console
 
@@ -15,7 +14,7 @@ class Setups:
         self._result = {}
     
     def _test_setups(self, symbols: list):
-        df_yf = yf.download(tickers=symbols, period='ytd', interval='1d')
+        df_yf = yf.download(tickers=symbols, period='1y', interval='1d')
         for symbol in symbols:
             console.print(f'[{datetime.now().strftime(format='%H:%M:%S')}] -> [[blue bold]Coletando dados históricos do ativo[/]] :: {symbol[:-3]}')
             
@@ -84,4 +83,3 @@ class Setups:
         annualized_volatility = daily_volatility * np.sqrt(252)
 
         return annualized_volatility * 100
-

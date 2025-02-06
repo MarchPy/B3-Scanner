@@ -6,3 +6,4 @@ openpyxl==3.1.5
 yfinance==0.2.51
 selenium==4.27.1
 webdriver_manager==4.0.2
+

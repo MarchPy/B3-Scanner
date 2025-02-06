@@ -33,6 +33,10 @@
 
     "filter": {
         "acoes": {
+            "COTAÇÃO": {
+                "min": null,
+                "max": 15
+            },
             "P/L": {
                 "min": 5,
                 "max": 10
@@ -154,6 +158,7 @@
     },
     
     "ahp-gaussiano": {
+        "limite": 10,
         "fiis": {
             "DY": 1,
             "LIQ. MED.": 1,
@@ -168,7 +173,8 @@
             "ROE": 1,
             "ROIC": 1,
             "DÍVIDA LÍQUIDA / EBIT": -1,
-            "DÍVIDA LÍQUIDA / EBITDA": -1
+            "DÍVIDA LÍQUIDA / EBITDA": -1,
+            "VOLA. ANUAL": -1
         }
     }
 }
