@@ -26,11 +26,16 @@ class Setups:
             df_tmp['Volume'] = df_yf['Volume'][symbol]
             
             # Testando setups
-            self._result[symbol[:-3]] = {
-                'Larry Williams': self.larry_williams(df=df_tmp),
-                'Cruzamento de médias': self.crossover(df=df_tmp),
-                'Vola. Anual': self.calculate_volatility(df=df_tmp)
-            }
+            
+            if not df_tmp.empty: 
+                self._result[symbol[:-3]] = {
+                    'Larry Williams': self.larry_williams(df=df_tmp),
+                    'Cruzamento de médias': self.crossover(df=df_tmp),
+                    'Vola. Anual': self.calculate_volatility(df=df_tmp)
+                }
+            else:
+                self._result[symbol[:-3]] = {}
+                
 
     # Setup N°1...
     def larry_williams(self, df: pd.DataFrame) -> bool:
